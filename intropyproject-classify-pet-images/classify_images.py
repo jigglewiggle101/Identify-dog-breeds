@@ -1,41 +1,55 @@
-from classifier import classifier
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# */AIPND-revision/intropyproject-classify-pet-images/classify_images.py
+#                                                                             
+# PROGRAMMER: Jesmine Goh
+# DATE CREATED:  30/11/2024                              
+# REVISED DATE:  01/12/2024
+# PURPOSE: Create a function classify_images that uses the classifier function 
+#          to create the classifier labels and then compares the classifier 
+#          labels to the pet image labels. This function inputs:
+#            -The Image Folder as image_dir within classify_images and function 
+#             and as in_arg.dir for function call within main. 
+#            -The results dictionary as results_dic within classify_images 
+#             function and results for the functin call within main.
+#            -The CNN model architecture as model within classify_images function
+#             and in_arg.arch for the function call within main. 
+#           This function uses the extend function to add items to the list 
+#           that's the 'value' of the results dictionary. You will be adding the
+#           classifier label as the item at index 1 of the list and the comparison 
+#           of the pet and classifier labels as the item at index 2 of the list.
+#
+##
+# Imports classifier function for using CNN to classify images 
+from classifier import classifier 
 
 def classify_images(images_dir, results_dic, model):
     """
-    Creates classifier labels with the classifier function, compares pet labels to 
+    Creates classifier labels with classifier function, compares pet labels to 
     the classifier labels, and adds the classifier label and the comparison of 
     the labels to the results dictionary using the extend function.
-    
     Parameters: 
-      images_dir - The path to the folder of images that are to be
-                   classified by the classifier function (string)
-      results_dic - Results Dictionary with 'key' as image filename and 'value'
-                    as a List:
+      images_dir - Path to the folder of images (string).
+      results_dic - Results dictionary where key is image filename and value 
+                    is a list: 
                       index 0 = pet image label (string)
-                      index 1 = classifier label (string) [added by this function]
-                      index 2 = 1/0 (int)  where 1 = match, 0 = no match [added by this function]
-      model - CNN model architecture used by the classifier function to classify the pet images.
-              Values must be either: resnet, alexnet, or vgg (string).
+                      index 1 = classifier label (string, added by this function)
+                      index 2 = match (1/0, added by this function).
+      model - CNN model architecture to use (string).
     Returns:
-           None - results_dic is mutable data type so no return needed.
+           None - results_dic is mutable, so no return is needed.         
     """
     for key in results_dic:
-        # Create the full file path for the image
-        image_path = f"{images_dir}/{key}"
-
-        # Use the classifier function to classify the image
-        model_label = classifier(image_path, model)
-
-        # Process the classifier label: make lowercase and strip whitespace
-        model_label = model_label.lower().strip()
-
-        # Get the true label (pet label) from the dictionary
+        # Get classifier label using the classifier function
+        model_label = classifier(f"{images_dir}/{key}", model).strip().lower()
+        
+        # Get true pet label from the dictionary
         truth = results_dic[key][0]
-
-        # Compare pet label (truth) and classifier label
+        
+        # Check if pet label matches any term in classifier label
         if truth in model_label:
-            # Add classifier label and match indicator (1) to the results dictionary
-            results_dic[key].extend([model_label, 1])
+            results_dic[key].extend((model_label, 1))
         else:
-            # Add classifier label and no-match indicator (0) to the results dictionary
-            results_dic[key].extend([model_label, 0])
+            results_dic[key].extend((model_label, 0))
+
+
