@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # */AIPND-revision/intropyproject-classify-pet-images/get_pet_labels.py
-#                                                                             
+#
 # PROGRAMMER: 
 # DATE CREATED:                                  
 # REVISED DATE: 
@@ -42,33 +42,28 @@ def get_pet_labels(image_dir):
     # Creates list of files in directory
     in_files = listdir(image_dir)
     
-    # Processes each of the files to create a dictionary where the key
-    # is the filename and the value is the picture label (below).
-    
     # Creates empty dictionary for the results (pet labels, etc.)
     results_dic = dict()
    
     # Processes through each file in the directory, extracting only the words
     # of the file that contain the pet image label
-    for idx in range(0, len(in_files), 1):
-       
-       # Skips file if starts with . (like .DS_Store of Mac OSX) because it 
-       # isn't a pet image file
-       if in_files[idx][0] != ".":
-           
-           # Creates temporary label variable to hold pet label name extracted 
-           pet_label = ""
+    for filename in in_files:
+        # Skips file if starts with . (like .DS_Store of Mac OSX) because it 
+        # isn't a pet image file
+        if filename[0] != ".":
+            # Creates temporary label variable to hold pet label name extracted 
+            pet_label = ""
 
-           # Extract the pet label from the filename (everything before the first number)
-           pet_label = in_files[idx].lower().split('_')[0:-1]
-           pet_label = " ".join(pet_label)
+            # Extract the pet label from the filename (everything before the first number)
+            pet_label = filename.lower().split('_')[0:-1]
+            pet_label = " ".join(pet_label)
 
-           # If filename doesn't already exist in dictionary, add it and its pet label
-           # Otherwise print an error message because it indicates duplicate files
-           if in_files[idx] not in results_dic:
-              results_dic[in_files[idx]] = [pet_label]
-           else:
-               print("** Warning: Duplicate files exist in directory:", 
-                     in_files[idx])
+            # If filename doesn't already exist in dictionary, add it and its pet label
+            # Otherwise print an error message because it indicates duplicate files
+            if filename not in results_dic:
+                results_dic[filename] = [pet_label]
+            else:
+                print("** Warning: Duplicate files exist in directory:", 
+                      filename)
 
     return results_dic

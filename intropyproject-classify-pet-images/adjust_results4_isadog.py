@@ -18,22 +18,22 @@ def adjust_results4_isadog(results_dic, dogfile):
             dog_names[dog_name] = 1  # Value is irrelevant; the key indicates a dog
 
     # Adjust the results_dic to mark whether the labels are of dogs or not
-    for key in results_dic:
-        pet_label = results_dic[key][0].lower()  # Pet image label (lowercase)
-        classifier_label = results_dic[key][1].lower()  # Classifier label (lowercase)
+    for value in results_dic.values():
+        pet_label = value[0].lower()  # Pet image label (lowercase)
+        classifier_label = value[1].lower()  # Classifier label (lowercase)
 
         # Ensure the list has at least 5 elements (if not, extend it with default values)
-        if len(results_dic[key]) < 5:
-            results_dic[key].extend([None] * (5 - len(results_dic[key])))  # Add None for missing elements
+        if len(value) < 5:
+            value.extend([None] * (5 - len(value)))  # Add None for missing elements
         
         # Check if the pet label corresponds to a dog
         if pet_label in dog_names:
-            results_dic[key][3] = 1  # Pet image is a dog
+            value[3] = 1  # Pet image is a dog
         else:
-            results_dic[key][3] = 0  # Pet image is not a dog
+            value[3] = 0  # Pet image is not a dog
 
         # Check if the classifier label corresponds to a dog
         if classifier_label in dog_names:
-            results_dic[key][4] = 1  # Classifier label is a dog
+            value[4] = 1  # Classifier label is a dog
         else:
-            results_dic[key][4] = 0  # Classifier label is not a dog
+            value[4] = 0  # Classifier label is not a dog

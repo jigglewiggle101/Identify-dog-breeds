@@ -1,19 +1,33 @@
-def print_results(results, results_stats, model, print_incorrect=False, print_summary=True):
+def print_results(results_dic, results_stats_dic, model, 
+                  print_incorrect_dogs=False, print_incorrect_breed=False):
     """
-    Print results of the classification, including accuracy and misclassified cases.
+    Prints summary results on the classification and then prints incorrectly 
+    classified dogs and incorrectly classified dog breeds if user indicates 
+    they want those printouts (use non-default values).
     """
-    if print_summary:
-        print(f"\nModel Architecture: {model.upper()}")
-        print(f"Total images: {results_stats['n_images']}")
-        print(f"Dog Images: {results_stats['n_dogs_img']}, "
-              f"Correctly Classified: {results_stats['pct_correct_dogs']:.2f}%")
-        print(f"Non-Dog Images: {results_stats['n_notdogs_img']}, "
-              f"Correctly Classified: {results_stats['pct_correct_notdogs']:.2f}%")
-        print(f"Correct Breed Classification: {results_stats['pct_correct_breed']:.2f}%")
+    # Print the model architecture
+    print(f"\n*** Results Summary for CNN Model Architecture {model.upper()} ***\n")
+    
+    # Print summary statistics
+    print(f"N Images               : {results_stats_dic['n_images']}")
+    print(f"N Dog Images           : {results_stats_dic['n_dogs_img']}")
+    print(f"N Not-a-Dog Images     : {results_stats_dic['n_notdogs_img']}")
+    print(f"pct_match              : {results_stats_dic.get('pct_match', 0):.6f}")
+    print(f"pct_correct_dogs       : {results_stats_dic['pct_correct_dogs']:.6f}")
+    print(f"pct_correct_breed      : {results_stats_dic['pct_correct_breed']:.6f}")
+    print(f"pct_correct_notdogs    : {results_stats_dic['pct_correct_notdogs']:.6f}\n")
 
-    if print_incorrect:
-        print("\nIncorrect Classifications:")
-        for filename, label in results.items():
-            # Misclassification logic: check if labels match
-            if label[2] == 0:
-                print(f"{filename}: Real={label[0]}, Predicted={label[1]}")
+    # Print misclassified dogs if requested
+    if print_incorrect_dogs:
+     print("\nINCORRECT Dog/NOT Dog Assignment:")
+    for filename, result in results_dic.items():
+        if sum(result[3:]) == 1:  # Misclassified as dog/not-a-dog
+            print(f"Real: {result[0]:<22} Classifier: {result[1]}")
+
+   # Print misclassified breeds if requested
+    if print_incorrect_breed:
+     print("\nINCORRECT Dog Breed Assignment:")
+    for filename, result in results_dic.items():
+        if sum(result[3:]) == 2 and result[2] == 0:  # Correctly classified as dog, wrong breed
+            print(f"Real: {result[0]:<22} Classifier: {result[1]}")
+
